@@ -9,13 +9,26 @@ import * as helpers from '../utils/helpers'
 class NewDeck extends Component {
   
     state = {
-        text: ''
+        text: '',
+        error: ''
     }
 
     submit = () => {
-        helpers.saveDeckTitle(this.state.text)
+        this.setState({error: ''})
+        
+        if(this.state.text === '') {
+            this.setState({error: 'Please enter a title for your deck'})
+        } else {
+            helpers.saveDeckTitle(this.state.text)
 
-        this.toDeckList()
+            this.setState({
+                text: '',
+                error: '',
+            })
+            
+            this.toDeckList()
+
+        }
     }
 
     toDeckList = () => {
@@ -23,6 +36,18 @@ class NewDeck extends Component {
             key: 'NewDeck'
         })
         this.props.navigation.dispatch(backAction)
+    }
+
+    renderError = () => {
+        if(this.state.error) {
+            return (
+                <Text style={styles.errorText}>
+                    {this.state.error}
+                </Text>
+            )
+        } else {
+            return null
+        }
     }
 
     render() {
@@ -35,6 +60,7 @@ class NewDeck extends Component {
                     style={styles.textBox}
                     placeholder={'Enter your title here'}
                 />
+                {this.renderError()}
                 <TouchableOpacity
                     style={Platform.OS === 'ios' ? styles.iosSubmitBtn : styles.androidSubmitBtn}
                     onPress={this.submit}
@@ -96,6 +122,12 @@ const styles = StyleSheet.create({
         fontSize: 18,
         textAlign: 'center',
     },
+    errorText: {
+        fontSize: 14,
+        alignSelf: 'center',
+        color: 'red',
+        marginBottom: 10,
+    }
 });
 
 
