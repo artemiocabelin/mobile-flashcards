@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
+import { NavigationActions } from 'react-navigation'
 import { Platform, StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
 
 import * as colors from '../utils/colors'
+import * as helpers from '../utils/helpers'
 
 class NewDeck extends Component {
   
@@ -11,9 +13,16 @@ class NewDeck extends Component {
     }
 
     submit = () => {
-        // dispatch action this.props.createDeck(this.state.text)
+        helpers.saveDeckTitle(this.state.text)
 
-        // redirect to DeckList View
+        this.toDeckList()
+    }
+
+    toDeckList = () => {
+        const backAction = NavigationActions.back({
+            key: 'NewDeck'
+        })
+        this.props.navigation.dispatch(backAction)
     }
 
     render() {
