@@ -1,23 +1,70 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Platform, StatusBar } from 'react-native';
+import { createStore } from 'redux'
+import { Provider } from 'react-redux'
+import { TabNavigator } from 'react-navigation'
+import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons'
+import { Constants } from 'expo'
+
+import reducers from './reducers'
+import * as colors from './utils/colors'
+import DeckList from './components/component_deck_list'
+import NewDeck from './components/component_deck_new'
+
+
+function UdaciStatusBar ({ backgroundColor, ...props}) {
+  return (
+    <View style={{backgroundColor, height: Constants.statusBarHeight}}>
+      <StatusBar translucent backgroundColor={backgroundColor} {...props} />
+    </View>
+  )
+}
+
+const Tabs = TabNavigator({
+  DeckList: {
+    screen: DeckList,
+    navigationOptions: {
+      tabBarLabel: 'Decks',
+      tabBarIcon: ({ tintColor }) => <Ionicons name='ios-paper' size={30} color={tintColor} />
+    }
+  },
+  NewDeck: {
+    screen: NewDeck,
+    navigationOptions: {
+      tabBarLabel: 'New Deck',
+      tabBarIcon: ({ tintColor }) => <MaterialCommunityIcons name='playlist-plus' size={30} color={tintColor} />
+    }
+  },
+}, {
+  tabBarOptions: {
+    activeTintColor: Platform.OS === 'ios' ? colors.purple : colors.white,
+    style : {
+      height: 56,
+      backgroundColor: Platform.OS === 'ios' ? colors.white : colors.purple,
+      shadowColor: 'rgba(0, 0, 0, 0.24)',
+      shadowOffset: {
+        width: 0,
+        height: 3
+      },
+      shadowRadius: 6,
+      shadowOpacity: 1
+    }
+  }
+})
+
+
 
 export default class App extends React.Component {
+  
   render() {
     return (
-      <View style={styles.container}>
-        <Text>Open up App.js to start working on your app!</Text>
-        <Text>Changes you make will automatically reload.</Text>
-        <Text>Shake your phone to open the developer menu.</Text>
-      </View>
+      <Provider store={createStore(reducers)} >  
+        <View style={{flex: 1}}>
+          <UdaciStatusBar backgroundColor={colors.purple} barStyle='light-content' />
+          <Tabs />
+        </View>
+      </Provider>
     );
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
