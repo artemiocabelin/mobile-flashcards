@@ -18,7 +18,7 @@ class DeckList extends Component {
     render() {
         return (
             <ScrollView style={styles.container}>
-                {_.map(this.props.decks, item => <DeckItem key={item.title} item={item} />)}
+                {_.map(this.props.decks, item => <DeckItem key={item.title} item={item} navigation={this.props.navigation} />)}
             </ScrollView>
         );
     }
