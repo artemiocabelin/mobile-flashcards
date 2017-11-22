@@ -1,4 +1,4 @@
-import { FETCH_DECK_LIST, CREATE_DECK } from '../actions'
+import { FETCH_DECK_LIST, CREATE_DECK, ADD_CARD_TO_DECK } from '../actions'
 
 export default function decks (state = {}, action) {
     switch (action.type) {
@@ -11,6 +11,12 @@ export default function decks (state = {}, action) {
         case FETCH_DECK_LIST :
             return {
                 ...action.payload
+            }
+
+        case ADD_CARD_TO_DECK :
+            return {
+                ...state,
+                [action.payload.title] : action.payload
             }
 
         default :

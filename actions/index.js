@@ -21,7 +21,7 @@ export function fetchDeckList() {
 }
 
 export function addCardToDeck(deckId, card) {
-    const deck = helpers.getDecks()
+    const deck = helpers.addCardToDeck(deckId, card)
 
     return {
         type: ADD_CARD_TO_DECK,

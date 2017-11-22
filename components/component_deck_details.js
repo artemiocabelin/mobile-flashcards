@@ -25,7 +25,8 @@ class DeckDetails extends Component {
             <TouchableOpacity
                 style={Platform.OS === 'ios' ? styles.iosSubmitBtn : styles.androidSubmitBtn}
                 onPress={() => this.props.navigation.navigate(
-                    'NewCard'
+                    'NewCard',
+                    { deckId }
                 )}
             >
                 <Text style={styles.submitBtnText}>Add Card</Text>

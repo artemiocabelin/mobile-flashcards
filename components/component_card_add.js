@@ -4,7 +4,7 @@ import { NavigationActions } from 'react-navigation'
 import { Platform, StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
 
 import * as colors from '../utils/colors'
-// import { createDeck } from '../actions'
+import { addCardToDeck } from '../actions'
 
 class NewCard extends Component {
   
@@ -15,12 +15,20 @@ class NewCard extends Component {
     }
 
     submit = () => {
+        const { deckId } = this.props.navigation.state.params
+
         this.setState({error: ''})
         
         if(this.state.questionText === '' || this.state.answerText === '') {
             this.setState({error: 'Please complete the form before submitting'})
         } else {
-            // this.props.createDeck(this.state.text)
+
+            const cardData = {
+                question: this.state.questionText,
+                answer: this.state.answerText,
+            }
+            
+            this.props.addCardToDeck(deckId, cardData)
 
             this.setState({
                 questionText: '',
@@ -28,17 +36,15 @@ class NewCard extends Component {
                 error: '',
             })
             
-            // this.toDeck()
+            this.toDeck()
 
         }
     }
 
-    // toDeck = () => {
-    //     const backAction = NavigationActions.back({
-    //         key: 'DeckDetails'
-    //     })
-    //     this.props.navigation.dispatch(backAction)
-    // }
+    toDeck = () => {
+        const backAction = NavigationActions.back()
+        this.props.navigation.dispatch(backAction)
+    }
 
     renderError = () => {
         if(this.state.error) {
@@ -139,4 +145,4 @@ const styles = StyleSheet.create({
 });
 
 
-export default connect()(NewCard)
+export default connect(null, { addCardToDeck })(NewCard)
