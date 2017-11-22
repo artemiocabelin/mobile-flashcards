@@ -16,10 +16,6 @@ export function getDecks() {
     })
 }
 
-export function getDeck() {
-
-}
-
 export function saveDeckTitle(title) {
     const deckValue = {
         title,
@@ -30,6 +26,6 @@ export function saveDeckTitle(title) {
     return { [title] : deckValue }
 }
 
-export function addCardToDeck() {
-
+export function addCardToDeck(deckId, card) {
+    console.log('addCardToDeck')
 }
