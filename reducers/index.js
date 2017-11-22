@@ -1,21 +1,8 @@
-import { FETCH_DECK_LIST, CREATE_DECK } from '../actions'
+import { combineReducers } from 'redux';
+import DeckListReducer from './reducer_deck_list';
 
-function decks (state = {}, action) {
-    switch (action.type) {
+const rootReducer = combineReducers({
+    decks: DeckListReducer,
+});
 
-        case CREATE_DECK :
-            return {
-                ...state,
-                ...action.payload
-            }
-        case FETCH_DECK_LIST :
-            return {
-                ...action.payload
-            }
-
-        default :
-            return state
-    }
-}
-
-export default decks
+export default rootReducer;
