@@ -1,21 +1,95 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { connect } from 'react-redux'
+import { StyleSheet, Text, View, TouchableOpacity, Platform } from 'react-native';
 
-export default class DeckItem extends Component {
-  
-    render() {
-        const { title, questions} = this.props.item
+import { startQuizSession, getNextQuestion, finishQuizSession } from '../actions'
+import * as colors from '../utils/colors'
+import * as helpers from '../utils/helpers'
+
+class QuizCard extends Component {
+    
+    state = {
+        showAnswer: false
+    }
+
+    componentDidMount() {
+        const { deckId } = this.props.navigation.state.params
+        this.startQuiz(deckId)
+    }
+
+    startQuiz = (deckId) => {
+        this.props.startQuizSession(deckId)
+    }
+
+    getNextQuestion = (score) => {
+        const { questions, state } = this.props.quiz
+        const nextActiveQuestionIndex = state.activeQuestionIndex + 1
+        const newState = helpers.getNewState(state, score, nextActiveQuestionIndex)
+        if(nextActiveQuestionIndex <= questions.length - 1) {
+            this.props.getNextQuestion(newState)
+        } else {
+            this.props.finishQuizSession(newState)
+        }
+    }
+
+    renderText() {
+        const { questions, state } = this.props.quiz
+
+        if(this.state.showAnswer) {
+            return (
+                <Text style={styles.questionStyle}>{questions[state.activeQuestionIndex].answer}</Text>
+            )
+        }
+
         return (
-            <TouchableOpacity 
-                style={styles.container}
-                onPress={() => this.props.navigation.navigate(
-                    'DeckDetails',
-                    { deckId : title }
-                )} >
-                <Text style={styles.titleStyle}>{title}</Text>
-                <Text style={styles.cardsStyle}>{questions.length} {questions.length > 1 ? 'cards' : 'card'}</Text>
-            </TouchableOpacity>
-        );
+            <Text style={styles.questionStyle}>{questions[state.activeQuestionIndex].question}</Text>
+        )
+    }
+
+    render() {
+        const { questions, state } = this.props.quiz
+        if(!questions) {
+            return (
+                <View>
+                    <Text>Loading...</Text>
+                </View>
+            )
+        }
+
+        if(!state.finished) {
+            return (
+                <View style={styles.container}>
+                    <Text style={styles.quizStatusStyle}>Question {state.activeQuestionIndex + 1} of {questions.length}</Text>
+                    {this.renderText()}
+                    <TouchableOpacity
+                        style={Platform.OS === 'ios' ? styles.iosFlipBtn : styles.androidFlipBtn}
+                        onPress={() => this.state.showAnswer ? this.setState({showAnswer: false}) : this.setState({showAnswer: true})}
+                    >
+                        <Text style={styles.flipBtnText}>See {!this.state.showAnswer ? 'Answer' : 'Question'}</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={Platform.OS === 'ios' ? styles.iosCorrectBtn : styles.androidCorrectBtn}
+                        onPress={() => this.getNextQuestion('correct')}
+                    >
+                        <Text style={styles.correctBtnText}>Correct</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={Platform.OS === 'ios' ? styles.iosIncorrectBtn : styles.androidIncorrectBtn}
+                        onPress={() => this.getNextQuestion('incorrect')}
+                    >
+                        <Text style={styles.incorrectBtnText}>Incorrect</Text>
+                    </TouchableOpacity>
+                </View>
+            )
+        } else {
+            return (
+                <View style={styles.container}>
+                    <Text style={styles.quizStatusStyle}>Congratulations! You've finished the Quiz.</Text>
+                    <Text style={styles.quizStatusStyle}>Results: You answered {state.percentage}% of the questions correctly</Text>
+                </View>
+            )
+        }
+
     }
 }
 
@@ -24,22 +98,106 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 5,
-    margin: 5,
-    padding: 50,
-    shadowColor: 'rgba(0, 0, 0, 0.24)',
-    shadowOffset: {
-        width: 0,
-        height: 3
-    },
-    shadowRadius: 6,
-    shadowOpacity: 1
+    flex: 1,
   },
-  titleStyle: {
-      fontSize: 20
-  },
-  cardsStyle: {
+  quizStatusStyle: {
       fontSize: 15,
-      color: '#111'
-  }
+      marginBottom: 30,
+      textAlign: 'center'
+  },
+  questionStyle: {
+      fontSize: 25,
+      marginBottom: 20,
+      textAlign: 'center'
+  },
+  iosFlipBtn: {
+      backgroundColor: colors.purple,
+      padding: 10,
+      borderRadius: 10,
+      height: 35,
+      width: 150,
+      marginLeft: 40,
+      marginRight: 40,
+      marginBottom: 50,
+  },
+  androidFlipBtn: {
+      backgroundColor: colors.purple,
+      padding: 10,
+      paddingLeft: 30,
+      paddingRight: 30,
+      borderRadius: 5,
+      height: 35,
+      width: 150,
+      alignSelf: 'flex-end',
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginBottom: 50,
+  },
+  flipBtnText: {
+      color: colors.white,
+      fontSize: 14,
+      textAlign: 'center',
+  },
+  iosIncorrectBtn: {
+      backgroundColor: colors.red,
+      padding: 10,
+      borderRadius: 7,
+      height: 45,
+      width: 200,
+      marginLeft: 40,
+      marginRight: 40,
+      marginBottom: 10,
+  },
+  androidIncorrectBtn: {
+      backgroundColor: colors.red,
+      padding: 10,
+      paddingLeft: 30,
+      paddingRight: 30,
+      borderRadius: 2,
+      height: 45,
+      width: 200,
+      alignSelf: 'flex-end',
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginBottom: 10,
+  },
+  incorrectBtnText: {
+      color: colors.white,
+      fontSize: 18,
+      textAlign: 'center',
+  },
+  iosCorrectBtn: {
+      backgroundColor: 'green',
+      padding: 10,
+      borderRadius: 7,
+      height: 45,
+      width: 200,
+      marginLeft: 40,
+      marginRight: 40,
+      marginBottom: 10,
+  },
+  androidCorrectBtn: {
+      backgroundColor: 'green',
+      padding: 10,
+      paddingLeft: 30,
+      paddingRight: 30,
+      borderRadius: 2,
+      height: 45,
+      width: 200,
+      alignSelf: 'flex-end',
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginBottom: 10,
+  },
+  correctBtnText: {
+      color: colors.white,
+      fontSize: 18,
+      textAlign: 'center',
+  },
 });
+
+function mapStateToProps({ quiz }) {
+    return { quiz }
+}
+
+export default connect(mapStateToProps, { startQuizSession, getNextQuestion, finishQuizSession })(QuizCard)

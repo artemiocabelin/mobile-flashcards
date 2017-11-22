@@ -55,12 +55,11 @@ yarn start
   * displays the number of cards left in the quiz
   * displays the percentage correct *once the quiz is complete*
       #### Behaviors
-    * on start, app will log time the quiz was started.
     *  clicking on Answer will **flip card** to reveal the answer
     *  clicking on Question will **flip card** to reveal the question
     *  clicking on Correct will increase number of correct answers
     *  clicking on Incorrect will increase number of incorrect answers
-    *  on completion, app will calculate percentage correct, then display results, time ended, and an option to restart, or finish quiz.
+    *  on completion, app will calculate percentage correct, then display the results and the options to restart or finish quiz.
     * clicking on Restart will restart the quiz
     * clicking on Finish Quiz will redirect to [3] Individual Deck View
 
@@ -79,8 +78,8 @@ yarn start
 
   ## Data Structure
 
-  Example:
-  ```
+   Deck List Example:
+  ```javascript
   {
     React: {
       title: 'React',
@@ -105,4 +104,28 @@ yarn start
       ]
     }
 }
+  ```
+
+  Quiz Session Example:
+  ```javascript
+  {
+    title: 'React',
+    questions: [
+        {
+          question: 'What is React?',
+          answer: 'A library for managing user interfaces'
+        },
+        {
+          question: 'Where do you make Ajax requests in React?',
+          answer: 'The componentDidMount lifecycle event'
+        }
+    ],
+    status: {
+        activeQuestionIndex: 1,
+        correctAns: 1,
+        incorrectAns: 0,
+        finished: false,
+        percentage: 0
+    }
+  }
   ```

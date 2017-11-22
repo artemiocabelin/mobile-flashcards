@@ -13,6 +13,7 @@ import DeckList from './components/component_deck_list'
 import NewDeck from './components/component_deck_new'
 import DeckDetails from './components/component_deck_details'
 import NewCard from './components/component_card_add'
+import QuizCard from './components/component_card_quiz'
 
 
 function UdaciStatusBar ({ backgroundColor, ...props}) {
@@ -41,6 +42,8 @@ const Tabs = TabNavigator({
     }
   },
 }, {
+  swipeEnabled: true,
+  animationEnabled: true,
   tabBarOptions: {
     activeTintColor: Platform.OS === 'ios' ? colors.purple : colors.white,
     style : {
@@ -72,6 +75,15 @@ const MainNavigator = StackNavigator({
   },
   NewCard: {
     screen: NewCard,
+    navigationOptions: {
+      headerTintColor: colors.white,
+      headerStyle: {
+        backgroundColor: colors.purple,
+      }
+    }
+  },
+  QuizCard: {
+    screen: QuizCard,
     navigationOptions: {
       headerTintColor: colors.white,
       headerStyle: {

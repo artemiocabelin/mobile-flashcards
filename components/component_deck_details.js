@@ -5,12 +5,28 @@ import { connect } from 'react-redux'
 import * as colors from '../utils/colors'
 
 class DeckDetails extends Component {
+  state = {
+    error: ''
+  }
+
   static navigationOptions = ({ navigation }) => {
         const { deckId } = navigation.state.params
         return {
             title: deckId
         }
   }
+
+  renderError = () => {
+        if(this.state.error) {
+            return (
+                <Text style={styles.errorText}>
+                    {this.state.error}
+                </Text>
+            )
+        } else {
+            return null
+        }
+    }
 
   render() {
     const { deckId } = this.props.navigation.state.params
@@ -24,18 +40,25 @@ class DeckDetails extends Component {
 
             <TouchableOpacity
                 style={Platform.OS === 'ios' ? styles.iosSubmitBtn : styles.androidSubmitBtn}
-                onPress={() => this.props.navigation.navigate(
+                onPress={() => {
+                  this.setState({error:''})
+                  this.props.navigation.navigate(
                     'NewCard',
                     { deckId }
-                )}
+                )}}
             >
                 <Text style={styles.submitBtnText}>Add Card</Text>
             </TouchableOpacity>
             <TouchableOpacity
                 style={Platform.OS === 'ios' ? styles.iosSubmitBtn : styles.androidSubmitBtn}
+                onPress={() => questions.length > 0 ? this.props.navigation.navigate(
+                    'QuizCard',
+                    { deckId }
+                ) : this.setState({error: 'Cannot start an empty quiz'})}
             >
                 <Text style={styles.submitBtnText}>Start Quiz</Text>
             </TouchableOpacity>
+            {this.renderError()}
         </View>
     );
   }
@@ -84,6 +107,12 @@ const styles = StyleSheet.create({
       fontSize: 18,
       textAlign: 'center',
   },
+  errorText: {
+      fontSize: 14,
+      alignSelf: 'center',
+      color: 'red',
+      marginBottom: 10,
+  }
 });
 
 function mapStateToProps({ decks }) {

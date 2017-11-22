@@ -35,3 +35,39 @@ export function addCardToDeck(deckId, card) {
             return deck
         })
 }
+
+export function startQuizSession(deckId) {
+    let initialQuizSettings = {
+        state: {
+            activeQuestionIndex: 0,
+            correctAns: 0,
+            incorrectAns: 0,
+            finished: false,
+            percentage: 0
+        }
+    }
+
+    return AsyncStorage.getItem(deckId)
+        .then(JSON.parse)
+        .then(deck => {
+            return Object.assign({}, deck, initialQuizSettings)
+        })
+}
+
+export function getNewState(state, score, idx) {
+    let newState = {...state}
+    newState.activeQuestionIndex = idx
+    if(score === 'correct') {
+        newState.correctAns ++
+    } else if (score === 'incorrect') {
+        newState.incorrectAns ++
+    }
+    return newState
+}
+
+export function setFinishedState(state) {
+    let newState = {...state}
+    newState.finished = true
+    newState.percentage = Math.floor((newState.correctAns / (newState.correctAns + newState.incorrectAns)) * 100)
+    return newState
+}
