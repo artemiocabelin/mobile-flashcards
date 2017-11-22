@@ -1,27 +1,21 @@
-// import * as helpers from '../utils/helpers'
-
-export const RECEIVE_ENTRIES = 'RECEIVE_ENTRIES'
-export const ADD_ENTRY = 'ADD_ENTRY'
+import * as helpers from '../utils/helpers'
 
 export const CREATE_DECK = 'CREATE_DECK'
+export const FETCH_DECK_LIST = 'FETCH_DECK_LIST'
 
-export function receiveEntries (entries) {
+export function createDeck(title) {
+    const newDeck = helpers.saveDeckTitle(title)
     return {
-        type: RECEIVE_ENTRIES,
-        entries
+        type: CREATE_DECK,
+        payload: newDeck
     }
 }
-export function addEntry (entry) {
+
+
+export function fetchDeckList() {
+    const deckList = helpers.getDecks()
     return {
-        type: ADD_ENTRY,
-        entry
+        type: FETCH_DECK_LIST,
+        payload: deckList
     }
 }
-// export function createDeck(title) {
-//     helpers.saveDeckTitle
-    
-//     return {
-//         type: CREATE_DECK,
-//         entry
-//     }
-// }

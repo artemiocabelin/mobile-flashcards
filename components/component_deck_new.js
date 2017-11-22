@@ -4,7 +4,7 @@ import { NavigationActions } from 'react-navigation'
 import { Platform, StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
 
 import * as colors from '../utils/colors'
-import * as helpers from '../utils/helpers'
+import { createDeck } from '../actions'
 
 class NewDeck extends Component {
   
@@ -19,7 +19,7 @@ class NewDeck extends Component {
         if(this.state.text === '') {
             this.setState({error: 'Please enter a title for your deck'})
         } else {
-            helpers.saveDeckTitle(this.state.text)
+            this.props.createDeck(this.state.text)
 
             this.setState({
                 text: '',
@@ -131,4 +131,4 @@ const styles = StyleSheet.create({
 });
 
 
-export default connect()(NewDeck)
+export default connect(null, { createDeck })(NewDeck)

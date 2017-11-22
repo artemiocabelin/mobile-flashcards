@@ -1,22 +1,40 @@
+import _ from 'lodash'
 import React, { Component } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { connect } from 'react-redux'
+import { StyleSheet, Text, View, ScrollView } from 'react-native';
 
-export default class App extends Component {
-  
-  render() {
-    return (
-        <View style={styles.container}>
-            <Text>Deck List Goes here</Text>
-        </View>
-    );
-  }
+import { fetchDeckList } from '../actions'
+import DeckItem from './component_deck_item'
+
+class DeckList extends Component {
+    componentDidMount() {
+        this.getDeckList()
+    }
+
+    getDeckList = () => {
+        this.props.fetchDeckList()
+    }
+
+    render() {
+        return (
+            <ScrollView style={styles.container}>
+                {_.map(this.props.decks, item => <DeckItem key={item.title} item={item} />)}
+            </ScrollView>
+        );
+    }
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
 });
+
+function mapStateToProps(state) {
+    return {
+        decks: state
+    }
+}
+
+export default connect(mapStateToProps, { fetchDeckList })(DeckList)

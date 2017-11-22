@@ -1,8 +1,9 @@
 import React from 'react';
 import { StyleSheet, Text, View, Platform, StatusBar } from 'react-native';
-import { createStore } from 'redux'
+import { createStore, applyMiddleware } from 'redux'
 import { Provider } from 'react-redux'
 import { TabNavigator } from 'react-navigation'
+import promise from 'redux-promise';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons'
 import { Constants } from 'expo'
 
@@ -19,6 +20,8 @@ function UdaciStatusBar ({ backgroundColor, ...props}) {
     </View>
   )
 }
+
+const createStoreWithMiddleware = applyMiddleware(promise)(createStore);
 
 const Tabs = TabNavigator({
   DeckList: {
@@ -58,7 +61,7 @@ export default class App extends React.Component {
   
   render() {
     return (
-      <Provider store={createStore(reducers)} >  
+      <Provider store={createStoreWithMiddleware(reducers)} >  
         <View style={{flex: 1}}>
           <UdaciStatusBar backgroundColor={colors.purple} barStyle='light-content' />
           <Tabs />
