@@ -12,6 +12,12 @@ yarn install
 yarn start
 ```
 ---
+## Platforms Tested
+* iOS
+
+* Android
+
+---
 ## Structure and Behaviors
 ---
 #### [0] DeckNav 

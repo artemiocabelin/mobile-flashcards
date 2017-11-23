@@ -31,13 +31,21 @@ class DeckDetails extends Component {
   render() {
     const { deckId } = this.props.navigation.state.params
     const { decks } = this.props
+
+    if(!decks[deckId]) {
+      return (
+        <View>
+          <Text>Loading...</Text>
+        </View>
+      )
+    }
+
     const { title, questions } = decks[deckId]
 
     return (
         <View style={styles.container}>
             <Text style={styles.titleStyle}>{title}</Text>
             <Text style={styles.cardsStyle}>{questions.length} {questions.length > 1 ? 'cards' : 'card'}</Text>
-
             <TouchableOpacity
                 style={Platform.OS === 'ios' ? styles.iosSubmitBtn : styles.androidSubmitBtn}
                 onPress={() => {

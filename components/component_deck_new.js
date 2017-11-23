@@ -19,23 +19,17 @@ class NewDeck extends Component {
         if(this.state.text === '') {
             this.setState({error: 'Please enter a title for your deck'})
         } else {
-            this.props.createDeck(this.state.text)
+            this.props.createDeck(this.state.text, this.toDeck(this.state.text))
 
             this.setState({
                 text: '',
                 error: '',
             })
-            
-            this.toDeckList()
-
         }
     }
 
-    toDeckList = () => {
-        const backAction = NavigationActions.back({
-            key: 'NewDeck'
-        })
-        this.props.navigation.dispatch(backAction)
+    toDeck = (deckId) => {
+        this.props.navigation.navigate('DeckDetails', { deckId })
     }
 
     renderError = () => {

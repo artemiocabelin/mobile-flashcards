@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { StyleSheet, Text, View, TouchableOpacity, Platform } from 'react-native';
+import { NavigationActions } from 'react-navigation'
 
 import { startQuizSession, getNextQuestion, finishQuizSession } from '../actions'
 import * as colors from '../utils/colors'
@@ -32,6 +33,11 @@ class QuizCard extends Component {
         }
     }
 
+    toDeck = () => {
+        const backAction = NavigationActions.back()
+        this.props.navigation.dispatch(backAction)
+    }
+
     renderText() {
         const { questions, state } = this.props.quiz
 
@@ -48,6 +54,8 @@ class QuizCard extends Component {
 
     render() {
         const { questions, state } = this.props.quiz
+        const { deckId } = this.props.navigation.state.params
+        
         if(!questions) {
             return (
                 <View>
@@ -86,6 +94,18 @@ class QuizCard extends Component {
                 <View style={styles.container}>
                     <Text style={styles.quizStatusStyle}>Congratulations! You've finished the Quiz.</Text>
                     <Text style={styles.quizStatusStyle}>Results: You answered {state.percentage}% of the questions correctly</Text>
+                    <TouchableOpacity
+                        style={Platform.OS === 'ios' ? styles.iosFinishBtn : styles.androidFinishBtn}
+                        onPress={() => this.startQuiz(deckId)}
+                    >
+                        <Text style={styles.finishBtnText}>Restart Quiz</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={Platform.OS === 'ios' ? styles.iosFinishBtn : styles.androidFinishBtn}
+                        onPress={() => this.toDeck()}
+                    >
+                        <Text style={styles.finishBtnText}>Back To Deck</Text>
+                    </TouchableOpacity>
                 </View>
             )
         }
@@ -166,6 +186,11 @@ const styles = StyleSheet.create({
       fontSize: 18,
       textAlign: 'center',
   },
+  finishBtnText: {
+      color: colors.purple,
+      fontSize: 18,
+      textAlign: 'center',
+  },
   iosCorrectBtn: {
       backgroundColor: 'green',
       padding: 10,
@@ -178,6 +203,30 @@ const styles = StyleSheet.create({
   },
   androidCorrectBtn: {
       backgroundColor: 'green',
+      padding: 10,
+      paddingLeft: 30,
+      paddingRight: 30,
+      borderRadius: 2,
+      height: 45,
+      width: 200,
+      alignSelf: 'flex-end',
+      justifyContent: 'center',
+      alignItems: 'center',
+      marginBottom: 10,
+  },
+  iosFinishBtn: {
+      padding: 10,
+      borderWidth: 1,
+      borderColor: colors.purple,
+      borderRadius: 7,
+      height: 45,
+      width: 200,
+      marginLeft: 40,
+      marginRight: 40,
+      marginBottom: 10,
+  },
+  androidFinishBtn: {
+      backgroundColor: 'black',
       padding: 10,
       paddingLeft: 30,
       paddingRight: 30,

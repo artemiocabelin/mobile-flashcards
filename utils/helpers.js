@@ -21,9 +21,8 @@ export function saveDeckTitle(title) {
         title,
         questions: []
     }
-    AsyncStorage.setItem(title, JSON.stringify(deckValue))
-
-    return { [title] : deckValue }
+    return AsyncStorage.setItem(title, JSON.stringify(deckValue))
+        .then(() => ({[title] : deckValue}))
 }
 
 export function addCardToDeck(deckId, card) {

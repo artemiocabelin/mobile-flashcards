@@ -7,8 +7,12 @@ export const START_QUIZ_SESSION = 'START_QUIZ_SESSION'
 export const GET_NEXT_QUESTION = 'GET_NEXT_QUESTION'
 export const FINISH_SESSION = 'FINISH_SESSION'
 
-export function createDeck(title) {
+export function createDeck(title, callback) {
     const newDeck = helpers.saveDeckTitle(title)
+        .then(data => {
+            callback
+            return data
+        })
     return {
         type: CREATE_DECK,
         payload: newDeck
