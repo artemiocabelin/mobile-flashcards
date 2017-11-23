@@ -30,6 +30,8 @@ class QuizCard extends Component {
             this.props.getNextQuestion(newState)
         } else {
             this.props.finishQuizSession(newState)
+            helpers.clearLocalNotification()
+                .then(helpers.setLocalNotification)
         }
     }
 

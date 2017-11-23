@@ -4,8 +4,6 @@ export default function decks (state = {}, action) {
     switch (action.type) {
 
         case CREATE_DECK :
-            console.log(CREATE_DECK)
-            console.log(action.payload)
             return {
                 ...state,
                 ...action.payload

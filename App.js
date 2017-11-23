@@ -14,7 +14,7 @@ import NewDeck from './components/component_deck_new'
 import DeckDetails from './components/component_deck_details'
 import NewCard from './components/component_card_add'
 import QuizCard from './components/component_card_quiz'
-
+import { setLocalNotification } from './utils/helpers'
 
 function UdaciStatusBar ({ backgroundColor, ...props}) {
   return (
@@ -94,7 +94,10 @@ const MainNavigator = StackNavigator({
 })
 
 export default class App extends React.Component {
-  
+  componentDidMount() {
+    setLocalNotification()
+  }
+
   render() {
     return (
       <Provider store={createStoreWithMiddleware(reducers)} >  
