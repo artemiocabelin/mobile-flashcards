@@ -60,6 +60,8 @@ Mobile-Flashcards
 ---
 #### [0] App
   * Initial display when app loads
+  * If not set yet, App will ask permission to use device's local notifications
+  * App will schedule notifications once permission is granted.
   * Displays a TabNavigator bar to switch between *[1] Deck list View* and *[2] New Deck View*
 
 ---
@@ -107,6 +109,7 @@ Mobile-Flashcards
     *  clicking on Correct will increase number of correct answers
     *  clicking on Incorrect will increase number of incorrect answers
     *  on completion, app will calculate percentage correct, then display the results and the options to restart or go back to individual deck.
+    * on completion, device will clear scheduled notifications for the day.
     * clicking on Restart Quiz will restart the quiz
     * clicking on Back To Deck will redirect to [3] Individual Deck View
 
