@@ -121,7 +121,7 @@ export function setLocalNotification () {
                 }
               )
 
-              AsyncStorage.setItems(NOTIFICATION_KEY, JSON.stringify(true))
+              AsyncStorage.setItem(NOTIFICATION_KEY, JSON.stringify(true))
             }
           })
       }
