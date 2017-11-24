@@ -11,8 +11,6 @@ import Loading from './common/component_loading'
 import QuestionDisplay from './common/component_display_question'
 import FinishDisplay from './common/component_display_finish'
 
-// bug on showAnswer switching
-
 class QuizCard extends Component {
     
     state = {
@@ -29,8 +27,10 @@ class QuizCard extends Component {
         const nextActiveQuestionIndex = state.activeQuestionIndex + 1
         const newState = helpers.getNewState(state, score, nextActiveQuestionIndex)
         if(nextActiveQuestionIndex <= questions.length - 1) {
+            this.setState({showAnswer: false})
             this.props.getNextQuestion(newState)
         } else {
+            this.setState({showAnswer: false})
             this.props.finishQuizSession(newState)
             helpers.clearLocalNotification()
                 .then(helpers.setLocalNotification)
