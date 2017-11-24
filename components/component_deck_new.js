@@ -1,16 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { NavigationActions } from 'react-navigation'
-import { Platform, StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, TextInput, KeyboardAvoidingView } from 'react-native';
 
 import * as colors from '../utils/colors'
 import * as actions from '../actions/actions_deck'
 
 import ErrorMsg from './common/component_error'
 import SubmitButton from './common/component_button_submit'
-
-// submit button moves if keyboard is up
-// keyboard hides after submit
 
 class NewDeck extends Component {
   
@@ -44,7 +41,7 @@ class NewDeck extends Component {
 
     render() {
         return (
-            <View style={styles.container}>
+            <KeyboardAvoidingView behavior='padding' style={styles.container}>
                 <Text style={styles.label}>What is the title of your new deck?</Text>
                 <TextInput 
                     value={this.state.text}
@@ -54,7 +51,7 @@ class NewDeck extends Component {
                 />
                 <ErrorMsg error={this.state.error} />
                 <SubmitButton onClick={this.submit} />
-            </View>
+            </KeyboardAvoidingView>
         );
     }
 }

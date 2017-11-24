@@ -1,16 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { NavigationActions } from 'react-navigation'
-import { StyleSheet, Text, View, TextInput} from 'react-native';
+import { StyleSheet, Text, KeyboardAvoidingView, TextInput} from 'react-native';
 
 import * as colors from '../utils/colors'
 import * as actions from '../actions/actions_deck'
 
 import ErrorMsg from './common/component_error'
 import SubmitButton from './common/component_button_submit'
-
-// submit button moves if keyboard is up
-// keyboard hides after submit
 
 class NewCard extends Component {
   
@@ -52,7 +49,7 @@ class NewCard extends Component {
 
     render() {
         return (
-            <View style={styles.container}>
+            <KeyboardAvoidingView behavior='padding' style={styles.container}>
                 <Text style={styles.label}>Add a New Card</Text>
                 <TextInput 
                     value={this.state.questionText}
@@ -68,7 +65,7 @@ class NewCard extends Component {
                 />
                 <ErrorMsg error={this.state.error} />
                 <SubmitButton onClick={this.submit} />
-            </View>
+            </KeyboardAvoidingView>
         );
     }
 }
