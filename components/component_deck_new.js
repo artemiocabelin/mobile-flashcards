@@ -9,7 +9,6 @@ import * as actions from '../actions/actions_deck'
 import ErrorMsg from './common/component_error'
 import SubmitButton from './common/component_button_submit'
 
-// add error message if deck title already exist
 // submit button moves if keyboard is up
 // keyboard hides after submit
 
@@ -27,8 +26,12 @@ class NewDeck extends Component {
 
     createDeck = () => {
         const { text } = this.state
-        if(text === '') {
+        const allDeckKeys = Object.keys(this.props.decks)
+
+        if (text === '') {
             this.setState({error: 'Please enter a title for your deck'})
+        } else if (allDeckKeys.includes(text)) {
+            this.setState({error: 'Deck title already exists. Please enter another title.'})
         } else {
             this.props.createDeck(text, this.toDeck(text))
             this.setState({ text: ''})
@@ -83,5 +86,8 @@ const styles = StyleSheet.create({
     },
 });
 
+function mapStateToProps({ decks }) {
+    return { decks }
+}
 
-export default connect(null, { ...actions })(NewDeck)
+export default connect(mapStateToProps, { ...actions })(NewDeck)
