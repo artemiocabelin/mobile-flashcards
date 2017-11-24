@@ -4,7 +4,14 @@ import { NavigationActions } from 'react-navigation'
 import { Platform, StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
 
 import * as colors from '../utils/colors'
-import { createDeck } from '../actions'
+import * as actions from '../actions/actions_deck'
+
+import ErrorMsg from './common/component_error'
+import SubmitButton from './common/component_button_submit'
+
+// add error message if deck title already exist
+// submit button moves if keyboard is up
+// keyboard hides after submit
 
 class NewDeck extends Component {
   
@@ -15,33 +22,21 @@ class NewDeck extends Component {
 
     submit = () => {
         this.setState({error: ''})
-        
-        if(this.state.text === '') {
+        this.createDeck()
+    }
+
+    createDeck = () => {
+        const { text } = this.state
+        if(text === '') {
             this.setState({error: 'Please enter a title for your deck'})
         } else {
-            this.props.createDeck(this.state.text, this.toDeck(this.state.text))
-
-            this.setState({
-                text: '',
-                error: '',
-            })
+            this.props.createDeck(text, this.toDeck(text))
+            this.setState({ text: ''})
         }
     }
 
     toDeck = (deckId) => {
         this.props.navigation.navigate('DeckDetails', { deckId })
-    }
-
-    renderError = () => {
-        if(this.state.error) {
-            return (
-                <Text style={styles.errorText}>
-                    {this.state.error}
-                </Text>
-            )
-        } else {
-            return null
-        }
     }
 
     render() {
@@ -54,13 +49,8 @@ class NewDeck extends Component {
                     style={styles.textBox}
                     placeholder={'Enter your title here'}
                 />
-                {this.renderError()}
-                <TouchableOpacity
-                    style={Platform.OS === 'ios' ? styles.iosSubmitBtn : styles.androidSubmitBtn}
-                    onPress={this.submit}
-                >
-                    <Text style={styles.submitBtnText}>Submit</Text>
-                </TouchableOpacity>
+                <ErrorMsg error={this.state.error} />
+                <SubmitButton onClick={this.submit} />
             </View>
         );
     }
@@ -91,39 +81,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         marginBottom: 10,
     },
-    iosSubmitBtn: {
-        backgroundColor: colors.purple,
-        padding: 10,
-        borderRadius: 7,
-        height: 45,
-        width: 200,
-        marginLeft: 40,
-        marginRight: 40,
-    },
-    androidSubmitBtn: {
-        backgroundColor: colors.purple,
-        padding: 10,
-        paddingLeft: 30,
-        paddingRight: 30,
-        borderRadius: 2,
-        height: 45,
-        width: 200,
-        alignSelf: 'flex-end',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    submitBtnText: {
-        color: colors.white,
-        fontSize: 18,
-        textAlign: 'center',
-    },
-    errorText: {
-        fontSize: 14,
-        alignSelf: 'center',
-        color: 'red',
-        marginBottom: 10,
-    }
 });
 
 
-export default connect(null, { createDeck })(NewDeck)
+export default connect(null, { ...actions })(NewDeck)

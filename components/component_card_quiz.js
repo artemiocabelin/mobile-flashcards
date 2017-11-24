@@ -3,9 +3,13 @@ import { connect } from 'react-redux'
 import { StyleSheet, Text, View, TouchableOpacity, Platform } from 'react-native';
 import { NavigationActions } from 'react-navigation'
 
-import { startQuizSession, getNextQuestion, finishQuizSession } from '../actions'
+import * as actions from '../actions/actions_card'
 import * as colors from '../utils/colors'
 import * as helpers from '../utils/helpers'
+
+import Loading from './common/component_loading'
+
+// bug on showAnswer switching
 
 class QuizCard extends Component {
     
@@ -60,9 +64,7 @@ class QuizCard extends Component {
         
         if(!questions) {
             return (
-                <View>
-                    <Text>Loading...</Text>
-                </View>
+                <Loading />
             )
         }
 
@@ -251,4 +253,4 @@ function mapStateToProps({ quiz }) {
     return { quiz }
 }
 
-export default connect(mapStateToProps, { startQuizSession, getNextQuestion, finishQuizSession })(QuizCard)
+export default connect(mapStateToProps, { ...actions })(QuizCard)

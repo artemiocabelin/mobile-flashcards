@@ -1,10 +1,16 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { NavigationActions } from 'react-navigation'
-import { Platform, StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TextInput} from 'react-native';
 
 import * as colors from '../utils/colors'
-import { addCardToDeck } from '../actions'
+import * as actions from '../actions/actions_deck'
+
+import ErrorMsg from './common/component_error'
+import SubmitButton from './common/component_button_submit'
+
+// submit button moves if keyboard is up
+// keyboard hides after submit
 
 class NewCard extends Component {
   
@@ -16,28 +22,24 @@ class NewCard extends Component {
 
     submit = () => {
         const { deckId } = this.props.navigation.state.params
-
         this.setState({error: ''})
-        
+        this.addCardToDeck(deckId)
+    }
+
+    addCardToDeck = (deckId) => {
         if(this.state.questionText === '' || this.state.answerText === '') {
             this.setState({error: 'Please complete the form before submitting'})
         } else {
-
             const cardData = {
                 question: this.state.questionText,
                 answer: this.state.answerText,
             }
-            
             this.props.addCardToDeck(deckId, cardData)
-
             this.setState({
                 questionText: '',
                 answerText: '',
-                error: '',
             })
-            
             this.toDeck()
-
         }
     }
 
@@ -46,17 +48,7 @@ class NewCard extends Component {
         this.props.navigation.dispatch(backAction)
     }
 
-    renderError = () => {
-        if(this.state.error) {
-            return (
-                <Text style={styles.errorText}>
-                    {this.state.error}
-                </Text>
-            )
-        } else {
-            return null
-        }
-    }
+    
 
     render() {
         return (
@@ -74,13 +66,8 @@ class NewCard extends Component {
                     style={styles.textBox}
                     placeholder={'Enter the card answer here'}
                 />
-                {this.renderError()}
-                <TouchableOpacity
-                    style={Platform.OS === 'ios' ? styles.iosSubmitBtn : styles.androidSubmitBtn}
-                    onPress={this.submit}
-                >
-                    <Text style={styles.submitBtnText}>Submit</Text>
-                </TouchableOpacity>
+                <ErrorMsg error={this.state.error} />
+                <SubmitButton onClick={this.submit} />
             </View>
         );
     }
@@ -110,39 +97,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         marginBottom: 10,
     },
-    iosSubmitBtn: {
-        backgroundColor: colors.purple,
-        padding: 10,
-        borderRadius: 7,
-        height: 45,
-        width: 200,
-        marginLeft: 40,
-        marginRight: 40,
-    },
-    androidSubmitBtn: {
-        backgroundColor: colors.purple,
-        padding: 10,
-        paddingLeft: 30,
-        paddingRight: 30,
-        borderRadius: 2,
-        height: 45,
-        width: 200,
-        alignSelf: 'flex-end',
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    submitBtnText: {
-        color: colors.white,
-        fontSize: 18,
-        textAlign: 'center',
-    },
-    errorText: {
-        fontSize: 14,
-        alignSelf: 'center',
-        color: 'red',
-        marginBottom: 10,
-    }
 });
 
 
-export default connect(null, { addCardToDeck })(NewCard)
+export default connect(null, { ...actions })(NewCard)

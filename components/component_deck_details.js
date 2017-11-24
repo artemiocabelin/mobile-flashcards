@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Platform } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { connect } from 'react-redux' 
 
 import * as colors from '../utils/colors'
 
+import ErrorMsg from './common/component_error'
+import Loading from './common/component_loading'
+import Button from './common/component_button'
+
 class DeckDetails extends Component {
-  state = {
-    error: ''
-  }
+  state = { error: '' }
 
   static navigationOptions = ({ navigation }) => {
         const { deckId } = navigation.state.params
@@ -16,27 +18,25 @@ class DeckDetails extends Component {
         }
   }
 
-  renderError = () => {
-        if(this.state.error) {
-            return (
-                <Text style={styles.errorText}>
-                    {this.state.error}
-                </Text>
-            )
-        } else {
-            return null
-        }
-    }
+  toNewCard = (deckId) => {
+    this.setState({error:''})
+    this.props.navigation.navigate('NewCard', { deckId })
+  }
+
+  toQuizCard = (deckId, questions) => {
+    questions.length > 0 
+      ? this.props.navigation.navigate('QuizCard', { deckId }) 
+      : this.setState({error: 'Cannot start an empty quiz'})
+  }
 
   render() {
     const { deckId } = this.props.navigation.state.params
     const { decks } = this.props
+    const props = this.props
 
     if(!decks[deckId]) {
       return (
-        <View>
-          <Text>Loading...</Text>
-        </View>
+        <Loading />
       )
     }
 
@@ -46,27 +46,19 @@ class DeckDetails extends Component {
         <View style={styles.container}>
             <Text style={styles.titleStyle}>{title}</Text>
             <Text style={styles.cardsStyle}>{questions.length} {questions.length > 1 ? 'cards' : 'card'}</Text>
-            <TouchableOpacity
-                style={Platform.OS === 'ios' ? styles.iosSubmitBtn : styles.androidSubmitBtn}
-                onPress={() => {
-                  this.setState({error:''})
-                  this.props.navigation.navigate(
-                    'NewCard',
-                    { deckId }
-                )}}
-            >
-                <Text style={styles.submitBtnText}>Add Card</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-                style={Platform.OS === 'ios' ? styles.iosSubmitBtn : styles.androidSubmitBtn}
-                onPress={() => questions.length > 0 ? this.props.navigation.navigate(
-                    'QuizCard',
-                    { deckId }
-                ) : this.setState({error: 'Cannot start an empty quiz'})}
-            >
-                <Text style={styles.submitBtnText}>Start Quiz</Text>
-            </TouchableOpacity>
-            {this.renderError()}
+            <Button 
+              text={'Add Card'} 
+              textBtnStyle={styles.submitBtnText} 
+              onClick={() => this.toNewCard(deckId)} 
+              iosStyle={styles.iosSubmitBtn}
+              androidStyle={styles.androidSubmitBtn} />
+            <Button 
+              text={'Start Quiz'} 
+              textBtnStyle={styles.submitBtnText} 
+              onClick={()=> this.toQuizCard(deckId, questions)} 
+              iosStyle={styles.iosSubmitBtn}
+              androidStyle={styles.androidSubmitBtn} />
+            <ErrorMsg error={this.state.error} />
         </View>
     );
   }
@@ -115,12 +107,6 @@ const styles = StyleSheet.create({
       fontSize: 18,
       textAlign: 'center',
   },
-  errorText: {
-      fontSize: 14,
-      alignSelf: 'center',
-      color: 'red',
-      marginBottom: 10,
-  }
 });
 
 function mapStateToProps({ decks }) {

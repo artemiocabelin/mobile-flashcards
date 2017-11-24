@@ -1,17 +1,14 @@
 import _ from 'lodash'
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
-import { StyleSheet, Text, View, ScrollView } from 'react-native';
+import { StyleSheet, ScrollView } from 'react-native';
 
-import { fetchDeckList } from '../actions'
-import DeckItem from './component_deck_item'
+import * as actions from '../actions/actions_deck'
+
+import DeckItem from './common/component_item'
 
 class DeckList extends Component {
     componentDidMount() {
-        this.getDeckList()
-    }
-
-    getDeckList = () => {
         this.props.fetchDeckList()
     }
 
@@ -32,9 +29,7 @@ const styles = StyleSheet.create({
 });
 
 function mapStateToProps({ decks }) {
-    return {
-        decks
-    }
+    return { decks }
 }
 
-export default connect(mapStateToProps, { fetchDeckList })(DeckList)
+export default connect(mapStateToProps, { ...actions })(DeckList)

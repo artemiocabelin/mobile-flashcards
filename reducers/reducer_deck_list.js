@@ -1,4 +1,4 @@
-import { FETCH_DECK_LIST, CREATE_DECK, ADD_CARD_TO_DECK } from '../actions'
+import { FETCH_DECK_LIST, CREATE_DECK, ADD_CARD_TO_DECK } from '../actions/actions_deck'
 
 export default function decks (state = {}, action) {
     switch (action.type) {

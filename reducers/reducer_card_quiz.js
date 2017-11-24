@@ -1,4 +1,4 @@
-import { START_QUIZ_SESSION, GET_NEXT_QUESTION, FINISH_SESSION } from '../actions'
+import { START_QUIZ_SESSION, GET_NEXT_QUESTION, FINISH_SESSION } from '../actions/actions_card'
 
 export default function quizSession (state = {}, action) {
     switch (action.type) {
