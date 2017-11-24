@@ -19,13 +19,53 @@ yarn start
 
 ---
 ## Structure and Behaviors
+```
+Mobile-Flashcards
+|
+|_actions
+|    |_actions_card.js
+|    |_actions_card.js
+|
+|_components
+|    |_common
+|    |    |_component_button.js
+|    |    |_component_button_submit.js
+|    |    |_component_display_finish.js
+|    |    |_component_display_question.js
+|    |    |_component_error.js
+|    |    |_component_item.js
+|    |    |_component_loading.js
+|    |    |_component_status_bar.js
+|    |
+|    |_component_card_add.js
+|    |_component_card_quiz.js
+|    |_component_deck_details.js
+|    |_component_deck_list.js
+|    |_component_deck_new.js
+|
+|-navigators
+|    |_index.js
+|
+|-reducers
+|    |_index.js
+|    |_reducer_card_quiz.js
+|    |_reducer_deck_list.js
+|
+|-utils
+|    |_colors.js
+|    |_helpers.js
+|
+|-App.js
+```
 ---
-#### [0] DeckNav 
-  * TabNavigator bar to switch between *[1] Deck list View* and *[2] New Deck View*
+#### [0] App
+  * Initial display when app loads
+  * Displays a TabNavigator bar to switch between *[1] Deck list View* and *[2] New Deck View*
 
 ---
 
 #### [1] Deck List View
+  * displays a list of decks
   * displays title of each Deck
   * displays the number of cards in each deck
     #### Behaviors
@@ -38,7 +78,8 @@ yarn start
   * displays an option to submit a new deck title
     #### Behaviors
     * an empty title will display an Error Messsage on submit
-    * clicking on submit will redirect to *[1] Deck List View*
+    * an already existing title will display an Error Messsage on submit
+    * clicking on submit will create a new deck with specified title then redirect to *[3] Individual Deck View*
 
 ---
 
@@ -58,16 +99,16 @@ yarn start
   * displays an option to view the answer(**flips** the card)
   * displays a 'Correct' button
   * displays an 'Incorrect' button
-  * displays the number of cards left in the quiz
+  * displays the current active card in the quiz
   * displays the percentage correct *once the quiz is complete*
       #### Behaviors
     *  clicking on Answer will **flip card** to reveal the answer
     *  clicking on Question will **flip card** to reveal the question
     *  clicking on Correct will increase number of correct answers
     *  clicking on Incorrect will increase number of incorrect answers
-    *  on completion, app will calculate percentage correct, then display the results and the options to restart or finish quiz.
-    * clicking on Restart will restart the quiz
-    * clicking on Finish Quiz will redirect to [3] Individual Deck View
+    *  on completion, app will calculate percentage correct, then display the results and the options to restart or go back to individual deck.
+    * clicking on Restart Quiz will restart the quiz
+    * clicking on Back To Deck will redirect to [3] Individual Deck View
 
 ---
 
@@ -82,7 +123,7 @@ yarn start
 
   ---
 
-  ## Data Structure
+  ## Redux Structure
 
    Deck List Example:
   ```javascript
@@ -126,7 +167,7 @@ yarn start
           answer: 'The componentDidMount lifecycle event'
         }
     ],
-    status: {
+    state: {
         activeQuestionIndex: 1,
         correctAns: 1,
         incorrectAns: 0,
