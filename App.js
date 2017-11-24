@@ -8,7 +8,7 @@ import reducers from './reducers'
 import * as colors from './utils/colors'
 import { setLocalNotification } from './utils/helpers'
 import { MainNavigator } from './navigators'
-import FlashCardStatusBar from './components/component_status_bar'
+import FlashCardStatusBar from './components/common/component_status_bar'
 
 const createStoreWithMiddleware = applyMiddleware(promise)(createStore);
 
